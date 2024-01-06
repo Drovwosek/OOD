@@ -12,12 +12,12 @@ void WriteShapesToFile(const std::string& fileName, const std::vector<std::uniqu
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(800, 600), "");
+
     std::vector<std::unique_ptr<CBaseShape>> shapes;
 
     ReadShapesFromFile("input.txt", shapes);
     WriteShapesToFile("output.txt", shapes);
 
-    // Создаем новый вектор для декорированных фигур
     std::vector<std::shared_ptr<CBaseShape>> decoratedShapes;
 
     // Проходим по исходному вектору и создаем декорированные версии фигур
@@ -57,30 +57,26 @@ sf::Vector2f extractCoordinates(const std::string& input)
 
     sf::Vector2f result;
 
-    // Ищем индекс начала координат (после знака равно)
-    size_t equalSignPos = input.find('=');
-    if (equalSignPos == std::string::npos) {
+    size_t beginCoordinatesSection = input.find('=');
+    if (beginCoordinatesSection == std::string::npos) {
         std::cerr << "Warning: equalSign not found in string." << std::endl;
-        return result; // Возвращаем пустой вектор
+        return result;
     }
 
-    // Ищем индекс конца координат (после точки с запятой)
-    size_t semicolonPos = input.find(';', equalSignPos);
-    if (semicolonPos == std::string::npos) {
+    size_t endCoordinatesSection = input.find(';', beginCoordinatesSection);
+    if (endCoordinatesSection == std::string::npos) {
         std::cerr << "Warning: semicolonSign not found in string." << std::endl;
-        return result; // Возвращаем пустой вектор
+        return result; 
     }
 
-    // Извлекаем подстроку, содержащую координаты
-    std::string coordinatesStr = input.substr(equalSignPos + 1, semicolonPos - equalSignPos - 1);
+    std::string coordinatesStr = input.substr(beginCoordinatesSection + 1, endCoordinatesSection - beginCoordinatesSection - 1);
 
-    // Используем stringstream для парсинга координат
     std::stringstream ss(coordinatesStr);
-    char comma; // Для разделителя ","
+    char separator;
 
-    if (!(ss >> result.x >> comma >> result.y)) {
+    if (!(ss >> result.x >> separator >> result.y)) {
         std::cerr << "Warning: invalid format of coordinates." << std::endl;
-        result = sf::Vector2f(); // Возвращаем пустой вектор
+        result = sf::Vector2f(); 
     }
 
     return result;

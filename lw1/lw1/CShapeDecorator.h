@@ -1,6 +1,3 @@
-#ifndef SHAPE_DECORATOR_H
-#define SHAPE_DECORATOR_H
-
 #include "CShape.h"
 
 class CShapeDecorator : public CBaseShape
@@ -37,5 +34,3 @@ private:
     std::shared_ptr<CBaseShape> m_shape;
     sf::Color m_borderColor;
 };
-
-#endif
